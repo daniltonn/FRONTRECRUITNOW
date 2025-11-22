@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 
-import { VacanteService } from '../../services/vacante-service';
+
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
+import { VacanteService } from '../../services/vacante-service';
+
 
 @Component({
   selector: 'app-vacante',
@@ -20,7 +22,7 @@ export class VacanteComponent implements OnInit {
   vacanteForm!: FormGroup;
 
   idVacante: any;
-  editableVacante: boolean = false;
+  editableVacante = false;
 
   constructor(
     private vacanteService: VacanteService,
@@ -47,30 +49,20 @@ export class VacanteComponent implements OnInit {
   }
 
   getAllVacantes() {
-    this.vacanteService.getAllVacantes().subscribe((data: any) => {
+    this.vacanteService.getAll().subscribe((data: any) => {
       this.vacanteList = data;
     });
   }
 
-  newMessage(messageText: string) {
-    this.toastr.success('Click para actualizar la lista', messageText)
+  newMessage(msg: string) {
+    this.toastr.success('Click para actualizar la lista', msg)
       .onTap.pipe(take(1)).subscribe(() => window.location.reload());
   }
 
   newVacanteEntry() {
-    const form = this.vacanteForm.value;
+    const body = this.vacanteForm.value;
 
-    const body = {
-      titulo: form.titulo,
-      descripcion: form.descripcion,
-      ubicacion: form.ubicacion,
-      salario: form.salario,
-      experienciaRequerida: form.experienciaRequerida,
-      requisitosEstudio: form.requisitosEstudio,
-      NBC: form.NBC
-    };
-
-    this.vacanteService.newVacante(body).subscribe({
+    this.vacanteService.create(body).subscribe({
       next: () => {
         this.router.navigate(['/vacantes'])
           .then(() => this.newMessage('Vacante registrada'));
@@ -82,45 +74,34 @@ export class VacanteComponent implements OnInit {
   toggleEditVacante(id: any) {
     this.idVacante = id;
 
-    this.vacanteService.getOneVacante(id).subscribe((data) => {
+    this.vacanteService.get(id).subscribe((data: any) => {
       this.vacanteForm.setValue({
-        titulo: data.titulo || '',
-        descripcion: data.descripcion || '',
-        ubicacion: data.ubicacion || '',
-        salario: data.salario || '',
-        experienciaRequerida: data.experienciaRequerida || '',
-        requisitosEstudio: data.requisitosEstudio || '',
-        NBC: data.NBC || ''
+        titulo: data.titulo ?? '',
+        descripcion: data.descripcion ?? '',
+        ubicacion: data.ubicacion ?? '',
+        salario: data.salario ?? '',
+        experienciaRequerida: data.experienciaRequerida ?? '',
+        requisitosEstudio: data.requisitosEstudio ?? '',
+        NBC: data.NBC ?? ''
       });
     });
 
-    this.editableVacante = !this.editableVacante;
+    this.editableVacante = true;
   }
 
   updateVacanteEntry() {
-    const form = this.vacanteForm.value;
+    const body = this.vacanteForm.value;
 
-    const body = {
-      titulo: form.titulo,
-      descripcion: form.descripcion,
-      ubicacion: form.ubicacion,
-      salario: form.salario,
-      experienciaRequerida: form.experienciaRequerida,
-      requisitosEstudio: form.requisitosEstudio,
-      NBC: form.NBC
-    };
-
-    this.vacanteService.updateVacante(this.idVacante, body).subscribe({
+    this.vacanteService.update(this.idVacante, body).subscribe({
       next: () => this.newMessage('Vacante editada'),
       error: (err) => console.error('ERROR PUT:', err)
     });
   }
 
   deleteVacanteEntry(id: any) {
-    this.vacanteService.deleteVacante(id).subscribe({
+    this.vacanteService.delete(id).subscribe({
       next: () => this.newMessage('Vacante eliminada'),
       error: (err) => console.error('ERROR DELETE:', err)
     });
   }
-
 }

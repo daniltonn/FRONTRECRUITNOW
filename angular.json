@@ -26,12 +26,15 @@
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-              "node_modules/ngx-toastr/toastr.css"
+              "src/assets/vendor/fontawesome-free/css/all.min.css",
+              "src/assets/css/sb-admin-2.css",
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css"
             ],
             "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+              "src/assets/vendor/jquery/jquery.min.js",
+              "src/assets/vendor/bootstrap/js/bootstrap.bundle.min.js",
+              "src/assets/js/sb-admin-2.min.js"
             ]
           },
           "configurations": {
@@ -89,12 +92,16 @@
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
-              "node_modules/ngx-toastr/toastr.css"
+              "src/assets/vendor/fontawesome-free/css/all.min.css",
+              "src/assets/css/sb-admin-2.css",
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css"
             ],
             "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+              "src/assets/vendor/jquery/jquery.min.js",
+              "src/assets/vendor/bootstrap/js/bootstrap.bundle.min.js",
+              "src/assets/vendor/jquery-easing/jquery.easing.min.js",
+              "src/assets/js/sb-admin-2.min.js"
             ]
           }
         }

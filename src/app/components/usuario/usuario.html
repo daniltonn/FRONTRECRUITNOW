@@ -1,0 +1,50 @@
+<div class="container mt-4">
+    <h3>Usuarios</h3>
+
+    <form [formGroup]="form" (ngSubmit)="guardar()" class="card p-3 shadow mb-4">
+
+        <div class="row">
+            <div class="col-md-4">
+                <label>Usuario</label>
+                <input formControlName="usuario" class="form-control">
+            </div>
+
+            <div class="col-md-4">
+                <label>Correo</label>
+                <input formControlName="email" class="form-control">
+            </div>
+
+            <div class="col-md-4">
+                <label>Contraseña</label>
+                <input type="password" formControlName="contrasena" class="form-control">
+            </div>
+        </div>
+
+        <button class="btn btn-primary w-100 mt-3">
+            {{ editMode ? 'Actualizar' : 'Crear usuario' }}
+        </button>
+
+    </form>
+
+    <table class="table table-bordered shadow">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let u of usuarios">
+                <td>{{ u.nombre }}</td>
+                <td>{{ u.email }}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm me-2" (click)="editar(u._id)">Editar</button>
+                    <button class="btn btn-danger btn-sm" (click)="eliminar(u._id)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

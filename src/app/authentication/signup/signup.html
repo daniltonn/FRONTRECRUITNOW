@@ -1,0 +1,28 @@
+<div class="container mt-5" style="max-width: 500px;">
+  <div class="card shadow p-4">
+
+    <h3 class="text-center mb-3">Registro</h3>
+
+    <form #f="ngForm" (ngSubmit)="onSignup(f)">
+      
+      <!-- Nombre -->
+      <input type="text" class="form-control mb-3"
+             name="nombre" ngModel placeholder="Nombre" required>
+
+      <!-- Email -->
+      <input type="email" class="form-control mb-3"
+             name="email" ngModel placeholder="Correo" required>
+
+      <!-- Contraseña -->
+      <input type="password" class="form-control mb-3"
+             name="contrasena" ngModel placeholder="Contraseña" required>
+
+      <button class="btn btn-primary w-100">Crear cuenta</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <a routerLink="/login">¿Ya tienes cuenta? Inicia sesión</a>
+    </div>
+
+  </div>
+</div>
