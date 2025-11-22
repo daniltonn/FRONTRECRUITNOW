@@ -22,6 +22,8 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'vacantes', component: VacanteComponent },
       { path: 'usuarios', component: UsuarioComponent },
+      //agregar rutas CRUD
+      
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
