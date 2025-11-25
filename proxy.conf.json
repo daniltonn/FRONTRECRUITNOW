@@ -13,6 +13,15 @@
     "target": "http://localhost:3000",
     "secure": false,
     "changeOrigin": false
+  },
+  "/api/postulacion": {
+    "target": "http://localhost:3000",
+    "secure": false,
+    "changeOrigin": false
+  },
+  "/api/hoja-vida": {
+    "target": "http://localhost:3000",
+    "secure": false,
+    "changeOrigin": false
   }
-  
 }

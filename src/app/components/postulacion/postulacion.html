@@ -1,0 +1,316 @@
+<div class="postulacion-container">
+  <div class="header">
+    <h2>Gestión de Postulaciones</h2>
+    <button class="btn btn-primary" (click)="mostrarFormulario()" *ngIf="!showForm">
+      <i class="fas fa-plus"></i> Nueva Postulación
+    </button>
+  </div>
+
+  <!-- Filtros y Búsqueda -->
+  <div class="filters-container" *ngIf="!showForm">
+    <div class="filters-row">
+      <div class="filter-group">
+        <label>Filtrar por Estado:</label>
+        <select [(ngModel)]="filtroEstado" (change)="filtrarPorEstado()" class="form-control">
+          <option value="">Todos los estados</option>
+          <option *ngFor="let estado of estadosPostulacion" [value]="estado">
+            {{ estado.replace('_', ' ') }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Buscar:</label>
+        <div class="search-input">
+          <input type="text" [(ngModel)]="terminoBusqueda" (keyup.enter)="buscar()" 
+                 class="form-control" placeholder="Buscar por nombre, email, vacante...">
+          <button class="btn btn-outline-primary" (click)="buscar()">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario -->
+  <div class="form-container" *ngIf="showForm">
+    <div class="form-header">
+      <h3>{{ editMode ? 'Editar' : 'Crear' }} Postulación</h3>
+      <button class="btn btn-secondary" (click)="ocultarFormulario()">
+        <i class="fas fa-times"></i> Cancelar
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+      <!-- Información Básica -->
+      <div class="section">
+        <h4>Información Básica</h4>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>ID Usuario *</label>
+            <input type="text" formControlName="usuarioId" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>ID Vacante *</label>
+            <input type="text" formControlName="vacanteId" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>ID Hoja de Vida *</label>
+            <input type="text" formControlName="hojaVidaId" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Estado *</label>
+            <select formControlName="estado" class="form-control" required>
+              <option *ngFor="let estado of estadosPostulacion" [value]="estado">
+                {{ estado.replace('_', ' ') }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Puntaje (0-100)</label>
+            <input type="number" formControlName="puntaje" class="form-control" 
+                   min="0" max="100" step="1">
+          </div>
+          <div class="form-group">
+            <label>Salario Esperado</label>
+            <input type="number" formControlName="salarioEsperado" class="form-control" 
+                   min="0" step="1000">
+          </div>
+          <div class="form-group full-width">
+            <label>Motivación</label>
+            <textarea formControlName="motivacion" class="form-control" rows="3"
+                      placeholder="¿Por qué te interesa esta posición?"></textarea>
+          </div>
+          <div class="form-group full-width">
+            <label>Comentarios</label>
+            <textarea formControlName="comentarios" class="form-control" rows="3"
+                      placeholder="Comentarios adicionales..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Disponibilidad -->
+      <div class="section">
+        <h4>Disponibilidad</h4>
+        <div formGroupName="disponibilidad">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Fecha Inicio Disponible *</label>
+              <input type="date" formControlName="fechaInicioDisponible" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Horario Preferido *</label>
+              <select formControlName="horarioPreferido" class="form-control" required>
+                <option *ngFor="let horario of horariosTrabajo" [value]="horario">
+                  {{ horario.replace('_', ' ') }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label>Modalidad de Trabajo *</label>
+              <div class="checkbox-group">
+                <label *ngFor="let modalidad of modalidadesTrabajo" class="checkbox-label">
+                  <input type="checkbox" 
+                         [value]="modalidad"
+                         [checked]="isModalidadSelected(modalidad)"
+                         (change)="onModalidadTrabajoChange($event)">
+                  {{ modalidad }}
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" formControlName="disponibilidadViajes">
+                Disponibilidad para Viajes
+              </label>
+            </div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" formControlName="disponibilidadCambioResidencia">
+                Disponibilidad para Cambio de Residencia
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success" [disabled]="!form.valid">
+          <i class="fas fa-save"></i> {{ editMode ? 'Actualizar' : 'Guardar' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="ocultarFormulario()">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Lista de Postulaciones -->
+  <div class="list-container" *ngIf="!showForm">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Candidato</th>
+            <th>Vacante</th>
+            <th>Estado</th>
+            <th>Puntaje</th>
+            <th>Fecha Postulación</th>
+            <th>Salario Esperado</th>
+            <th>Entrevistas</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let postulacion of postulaciones">
+            <td>
+              <div class="candidate-info">
+                <strong>{{ postulacion.usuario?.nombre || 'N/A' }}</strong>
+                <small class="text-muted d-block">{{ postulacion.usuario?.email || 'N/A' }}</small>
+              </div>
+            </td>
+            <td>
+              <div class="job-info">
+                <strong>{{ postulacion.vacante?.titulo || 'N/A' }}</strong>
+                <small class="text-muted d-block">{{ postulacion.vacante?.empresa || 'N/A' }}</small>
+              </div>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="getEstadoClass(postulacion.estado)">
+                {{ postulacion.estado.replace('_', ' ') }}
+              </span>
+            </td>
+            <td>
+              <span [ngClass]="getPuntajeClass(postulacion.puntaje)">
+                {{ postulacion.puntaje || 'Sin evaluar' }}
+              </span>
+            </td>
+            <td>{{ formatearFecha(postulacion.fechaPostulacion) }}</td>
+            <td>
+              {{ postulacion.salarioEsperado ? (postulacion.salarioEsperado | currency:'USD':'symbol':'1.0-0') : 'No especificado' }}
+            </td>
+            <td>
+              <span class="badge badge-info">
+                {{ postulacion.entrevistas?.length || 0 }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-sm btn-primary" (click)="editar(postulacion)" title="Editar">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" 
+                          data-toggle="dropdown" title="Cambiar Estado">
+                    <i class="fas fa-exchange-alt"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <button *ngFor="let estado of estadosPostulacion" 
+                            class="dropdown-item" 
+                            [class.active]="estado === postulacion.estado"
+                            (click)="cambiarEstado(postulacion, estado)">
+                      {{ estado.replace('_', ' ') }}
+                    </button>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-warning" (click)="asignarPuntaje(postulacion)" title="Asignar Puntaje">
+                  <i class="fas fa-star"></i>
+                </button>
+                <button class="btn btn-sm btn-info" (click)="mostrarModalEntrevista(postulacion)" title="Programar Entrevista">
+                  <i class="fas fa-calendar-plus"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="eliminar(postulacion._id!)" title="Eliminar">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="postulaciones.length === 0" class="empty-state">
+      <i class="fas fa-inbox fa-3x text-muted"></i>
+      <p>No hay postulaciones registradas</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Entrevista -->
+<div class="modal" [class.show]="showEntrevistaModal" *ngIf="showEntrevistaModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Programar Entrevista</h5>
+        <button type="button" class="btn-close" (click)="ocultarModalEntrevista()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form [formGroup]="entrevistaForm" (ngSubmit)="programarEntrevista()">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Tipo de Entrevista *</label>
+              <select formControlName="tipo" class="form-control" required>
+                <option *ngFor="let tipo of tiposEntrevista" [value]="tipo">
+                  {{ tipo }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Modalidad *</label>
+              <select formControlName="modalidad" class="form-control" required>
+                <option *ngFor="let modalidad of modalidadesEntrevista" [value]="modalidad">
+                  {{ modalidad }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Fecha *</label>
+              <input type="date" formControlName="fecha" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Hora *</label>
+              <input type="time" formControlName="hora" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Duración (minutos) *</label>
+              <input type="number" formControlName="duracionEstimada" class="form-control" 
+                     min="15" step="15" required>
+            </div>
+            <div class="form-group">
+              <label>Entrevistador *</label>
+              <input type="text" formControlName="entrevistador" class="form-control" required>
+            </div>
+            <div class="form-group full-width">
+              <label>Ubicación</label>
+              <input type="text" formControlName="ubicacion" class="form-control" 
+                     placeholder="Dirección o sala de reunión">
+            </div>
+            <div class="form-group full-width">
+              <label>Enlace Virtual</label>
+              <input type="url" formControlName="enlaceVirtual" class="form-control" 
+                     placeholder="https://meet.google.com/...">
+            </div>
+            <div class="form-group full-width">
+              <label>Comentarios</label>
+              <textarea formControlName="comentarios" class="form-control" rows="3"
+                        placeholder="Instrucciones adicionales..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" [disabled]="!entrevistaForm.valid">
+            <i class="fas fa-calendar-check"></i> Programar
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="ocultarModalEntrevista()">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay del modal -->
+<div class="modal-backdrop" *ngIf="showEntrevistaModal" (click)="ocultarModalEntrevista()"></div>
