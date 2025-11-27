@@ -1,37 +1,37 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { HojaVida } from '../models/hoja-vida';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HojaVidaService {
-  private apiUrl = 'http://localhost:3000/api/hoja-vida';
 
-  constructor(private http: HttpClient) { }
+  private apiUrl = '/api/hoja-vida';
 
-  getAll(): Observable<HojaVida[]> {
-    return this.http.get<HojaVida[]>(this.apiUrl);
+  constructor(private http: HttpClient) {}
+
+  getAll(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
   }
 
-  get(id: string): Observable<HojaVida> {
-    return this.http.get<HojaVida>(`${this.apiUrl}/${id}`);
+  get(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
-  getByUsuario(usuarioId: string): Observable<HojaVida> {
-    return this.http.get<HojaVida>(`${this.apiUrl}/usuario/${usuarioId}`);
+  getByUsuario(usuarioId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/usuario/${usuarioId}`);
   }
 
-  create(hojaVida: HojaVida): Observable<HojaVida> {
-    return this.http.post<HojaVida>(this.apiUrl, hojaVida);
+  create(data: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, data);
   }
 
-  update(id: string, hojaVida: HojaVida): Observable<HojaVida> {
-    return this.http.put<HojaVida>(`${this.apiUrl}/${id}`, hojaVida);
+  update(id: string, data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, data);
   }
 
   delete(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
