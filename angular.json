@@ -34,7 +34,9 @@
             "scripts": [
               "src/assets/vendor/jquery/jquery.min.js",
               "src/assets/vendor/bootstrap/js/bootstrap.bundle.min.js",
-              "src/assets/js/sb-admin-2.min.js"
+              "src/assets/js/sb-admin-2.min.js",
+                "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+
             ]
           },
           "configurations": {
@@ -101,11 +103,16 @@
               "src/assets/vendor/jquery/jquery.min.js",
               "src/assets/vendor/bootstrap/js/bootstrap.bundle.min.js",
               "src/assets/vendor/jquery-easing/jquery.easing.min.js",
-              "src/assets/js/sb-admin-2.min.js"
+              "src/assets/js/sb-admin-2.min.js",
+                "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+
             ]
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "159498fa-5e3a-4ac8-aaab-7c09cb3fa996"
   }
 }

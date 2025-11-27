@@ -1,0 +1,94 @@
+<div class="container mt-3">
+
+  <h2>Gestión de Hojas de Vida</h2>
+
+  <button class="btn btn-primary mb-3" (click)="mostrarFormulario()" *ngIf="!showForm">
+    Nueva Hoja de Vida
+  </button>
+
+  <!-- FORMULARIO -->
+  <div *ngIf="showForm" class="card p-4">
+
+    <h4>{{ editMode ? 'Editar Hoja de Vida' : 'Nueva Hoja de Vida' }}</h4>
+
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+
+      <label>ID Usuario *</label>
+      <input formControlName="usuarioId" class="form-control mb-3">
+
+      <h5>Información Personal</h5>
+
+      <div formGroupName="informacionPersonal" class="mb-3">
+        <input formControlName="nombre" class="form-control mb-2" placeholder="Nombre">
+        <input formControlName="apellido" class="form-control mb-2" placeholder="Apellido">
+        <input formControlName="email" class="form-control mb-2" placeholder="Email">
+        <input formControlName="telefono" class="form-control mb-2" placeholder="Teléfono">
+        <input formControlName="direccion" class="form-control mb-2" placeholder="Dirección">
+        <input formControlName="fechaNacimiento" type="date" class="form-control mb-2">
+        <input formControlName="nacionalidad" class="form-control mb-2" placeholder="Nacionalidad">
+      </div>
+
+      <h5>Resumen Profesional</h5>
+      <textarea formControlName="resumenProfesional" class="form-control mb-3"></textarea>
+
+      <h5>Experiencia Laboral</h5>
+      <button type="button" class="btn btn-sm btn-outline-primary mb-2" (click)="agregarExperiencia()">Agregar</button>
+      <div formArrayName="experienciaLaboral">
+        <div *ngFor="let exp of experienciaLaboral.controls; let i = index" [formGroupName]="i" class="border p-2 mb-2">
+          <input formControlName="empresa" class="form-control mb-1" placeholder="Empresa">
+          <input formControlName="cargo" class="form-control mb-1" placeholder="Cargo">
+          <input type="date" formControlName="fechaInicio" class="form-control mb-1">
+          <input type="date" formControlName="fechaFin" class="form-control mb-1">
+          <textarea formControlName="descripcion" class="form-control mb-1"></textarea>
+        </div>
+      </div>
+
+      <h5>Educación</h5>
+      <button type="button" class="btn btn-sm btn-outline-primary mb-2" (click)="agregarEducacion()">Agregar</button>
+      <div formArrayName="educacion">
+        <div *ngFor="let edu of educacion.controls; let i = index" [formGroupName]="i" class="border p-2 mb-2">
+          <input formControlName="institucion" class="form-control mb-1">
+          <input formControlName="titulo" class="form-control mb-1">
+          <input type="date" formControlName="fechaInicio" class="form-control mb-1">
+          <input type="date" formControlName="fechaFin" class="form-control mb-1">
+          <textarea formControlName="descripcion" class="form-control mb-1"></textarea>
+        </div>
+      </div>
+
+      <button class="btn btn-success mt-3">Guardar</button>
+      <button type="button" class="btn btn-secondary mt-3 ms-2" (click)="ocultarFormulario()">Cancelar</button>
+
+    </form>
+
+  </div>
+
+  <!-- LISTA -->
+  <table class="table table-bordered" *ngIf="!showForm">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th>Experiencias</th>
+        <th>Educación</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let hv of hojasVida">
+        <td>{{ hv.informacionPersonal.nombre }} {{ hv.informacionPersonal.apellido }}</td>
+        <td>{{ hv.informacionPersonal.email }}</td>
+        <td>{{ hv.informacionPersonal.telefono }}</td>
+        <td>{{ hv.experienciaLaboral.length }}</td>
+        <td>{{ hv.educacion.length }}</td>
+        <td>
+          <button class="btn btn-sm btn-primary" (click)="editar(hv)">Editar</button>
+          <button class="btn btn-sm btn-danger ms-2" (click)="eliminar(hv._id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+
+</div>

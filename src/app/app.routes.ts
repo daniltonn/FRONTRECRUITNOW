@@ -6,6 +6,8 @@ import { LoginComponent } from "./authentication/login/login";
 import { DashboardComponent } from "./components/dashboard/dashboard";
 import { VacanteComponent } from "./components/vacante/vacante";
 import { UsuarioComponent } from "./components/usuario/usuario";
+import { HojaVidaComponent } from "./components/hoja-vida/hoja-vida";
+import { PostulacionComponent } from "./components/postulacion/postulacion";
 
 export const routes: Routes = [
 
@@ -22,6 +24,8 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'vacantes', component: VacanteComponent },
       { path: 'usuarios', component: UsuarioComponent },
+      { path: 'hojas-vida', component: HojaVidaComponent },
+      { path: 'postulaciones', component: PostulacionComponent },
       //agregar rutas CRUD
       
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }

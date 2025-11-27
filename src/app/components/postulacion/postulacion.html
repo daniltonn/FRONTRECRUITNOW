@@ -1,0 +1,63 @@
+<div class="container mt-4">
+
+  <h2>Gestión de Postulaciones</h2>
+
+  <button class="btn btn-primary mb-3" (click)="mostrarFormulario()" *ngIf="!showForm">
+    Nueva Postulación
+  </button>
+
+  <!-- FORMULARIO -->
+  <div *ngIf="showForm" class="card p-3 mb-3">
+
+    <h4>{{ editMode ? 'Editar Postulación' : 'Nueva Postulación' }}</h4>
+
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+
+      <label>Usuario *</label>
+      <input type="text" formControlName="usuario" class="form-control mb-2">
+
+      <label>Vacante *</label>
+      <input type="text" formControlName="vacante" class="form-control mb-2">
+
+      <label>Estado *</label>
+      <select formControlName="estado" class="form-control mb-3">
+        <option *ngFor="let est of estados" [value]="est">{{ est }}</option>
+      </select>
+
+      <button class="btn btn-success" type="submit">
+        {{ editMode ? 'Actualizar' : 'Guardar' }}
+      </button>
+
+      <button class="btn btn-secondary ms-2" type="button" (click)="ocultarFormulario()">
+        Cancelar
+      </button>
+
+    </form>
+  </div>
+
+  <!-- LISTA -->
+  <table class="table table-bordered" *ngIf="!showForm">
+    <thead>
+      <tr>
+        <th>Usuario</th>
+        <th>Vacante</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let p of postulaciones">
+        <td>{{ p.usuario?.nombre }}</td>
+        <td>{{ p.vacante?.titulo }}</td>
+        <td>{{ p.estado }}</td>
+        <td>
+          <button class="btn btn-sm btn-primary" (click)="editar(p)">Editar</button>
+          <button class="btn btn-sm btn-danger ms-2" (click)="eliminar(p._id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+
+</div>
